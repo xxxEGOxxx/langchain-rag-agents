@@ -1,4 +1,4 @@
-# langchain-ra-agents
+# langchain-rag-agents
 
 A repository for learning LangChain🦜🔗  by building a generative ai application.
 

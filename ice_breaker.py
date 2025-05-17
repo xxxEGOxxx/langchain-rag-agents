@@ -45,10 +45,13 @@
 #         ice_breakers,
 #         linkedin_data.get("photoUrl"),
 #     )
+import dotenv
 from langchain_core.output_parsers import StrOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_ollama import ChatOllama
+
+from third_parties.linkedin import scrape_linkedin_profile
 
 information = """
 Elon Reeve Musk (/ˈiːlɒn/ EE-lon; born June 28, 1971) is a businessman known for his leadership of Tesla, SpaceX, and X (formerly Twitter). Since 2025, he has been a senior advisor to United States president Donald Trump and the de facto head of the Department of Government Efficiency (DOGE). Musk has been the wealthiest person in the world since 2021; as of March 2025, Forbes estimates his net worth to be US$345 billion. He was named Time magazine's Person of the Year in 2021.
@@ -300,6 +303,7 @@ Musk was a partial inspiration for the characterization of Tony Stark in the Mar
 if __name__ == "__main__":
     print("Welcome to Ice Breaker")
 
+    dotenv.load_dotenv()
     summary_template = """
         given the information {information} about a person from I want you to create:
         1. a short summary
@@ -316,6 +320,10 @@ if __name__ == "__main__":
     chain = summary_prompt_template | llm | StrOutputParser()
     print("CHAIN: \n", chain)
 
-    res = chain.invoke(input={"information": information})
+    linkedin_data = scrape_linkedin_profile(
+        linkedin_profile_url="https://www.linkedin.com/in/yahor-hryhoryk/",
+    )
+
+    res = chain.invoke(input={"information": linkedin_data})
 
     print(res)
